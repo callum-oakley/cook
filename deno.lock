@@ -1,0 +1,18 @@
+{
+  "version": "3",
+  "packages": {
+    "specifiers": {
+      "jsr:@std/cli@^0.224.5": "jsr:@std/cli@0.224.7",
+      "jsr:@std/fmt@^0.225.4": "jsr:@std/fmt@0.225.4"
+    },
+    "jsr": {
+      "@std/cli@0.224.7": {
+        "integrity": "654ca6477518e5e3a0d3fabafb2789e92b8c0febf1a1d24ba4b567aba94b5977"
+      },
+      "@std/fmt@0.225.4": {
+        "integrity": "584c681cf422b70e28959b57e59012823609c087384cbf12d05f67814797fda3"
+      }
+    }
+  },
+  "remote": {}
+}
