@@ -37,7 +37,7 @@ function run(recipe: Recipe, args: string[]) {
     for (let i = 0; i < recipe.parameters.length; i++) {
         env[recipe.parameters[i]] = args[i];
     }
-    return new Deno.Command(Deno.env.get("SHELL")!, {
+    return new Deno.Command(Deno.env.get("SHELL") ?? "/bin/sh", {
         args: [
             "-c",
             recipe.body,
