@@ -3,13 +3,22 @@ import { bold, red } from "jsr:@std/fmt@^0.225.4/colors";
 import pkg from "./deno.json" with { type: "json" };
 
 const help = `
-TODO
+Run recipes defined in a cookbook
+
+Usage:
+  cook [OPTIONS] [RECIPE] [ARGUMENTS]
+
+Options:
+  -l, --list     List all recipes along with their parameters
+  -v, --version  Print version and exit
+  -h, --help     Print this help message
 `.trim();
 
 type Recipe = {
     name: string;
     parameters: string[];
     rest: boolean;
+    signature: string;
     body: string;
 };
 
@@ -29,7 +38,12 @@ function run(recipe: Recipe, args: string[]) {
         env[recipe.parameters[i]] = args[i];
     }
     return new Deno.Command(Deno.env.get("SHELL")!, {
-        args: ["-c", recipe.body, ...args.slice(recipe.parameters.length)],
+        args: [
+            "-c",
+            recipe.body,
+            recipe.name,
+            ...args.slice(recipe.parameters.length),
+        ],
         env,
     }).spawn().status;
 }
@@ -56,14 +70,14 @@ function parseCookbook(text: string) {
             rest = true;
         }
 
-        cookbook.push({ name, parameters, rest, body });
+        cookbook.push({ name, parameters, rest, signature, body });
     }
 
     return cookbook;
 }
 
 async function main() {
-    const flags = ["version", "help"];
+    const flags = ["list", "version", "help"];
     const alias: Record<string, string> = {};
     for (const flag of flags) {
         alias[flag] = flag[0];
@@ -80,7 +94,7 @@ async function main() {
         },
     });
 
-    if (args.help) {
+    if (args.help || Deno.args.length === 0) {
         console.log(help);
         return;
     }
@@ -94,8 +108,10 @@ async function main() {
     const text = (await Deno.readTextFile("cookbook")).trim() + "\n";
     const cookbook = parseCookbook(text);
 
-    if (Deno.args.length === 0) {
-        console.log(text.trim());
+    if (args.list) {
+        for (const recipe of cookbook) {
+            console.log(recipe.signature);
+        }
         return;
     }
 
