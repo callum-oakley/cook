@@ -28,7 +28,7 @@ function print(recipe: Recipe) {
         indentation++;
     }
     for (const line of recipe.body.split("\n")) {
-        console.error(`> ${line.substring(indentation)}`);
+        console.error(red(`> ${line.substring(indentation)}`));
     }
 }
 
